@@ -1,4 +1,4 @@
-import time
+import random
 from tkinter import *  
 visit=[[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
     [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
@@ -126,36 +126,35 @@ def judge_win():
        elif(white>=126):
               bnt=Button(windows,text="白方获胜",bg="#e51c23",width=5)
               bnt.grid(row=30,column=15)
-              print("white win")                     
+              print("white win")  
+def ai():
+    global arr2
+    global count
+    count=-1
+    r = random.randint(1, 16)
+    c = random.randint(1, 16)
+    while(arr2[r][c]!=0):
+        r = random.randint(1, 16)
+        c = random.randint(1, 16)
+    bnt=Button(windows,bg="white",command=lambda x=r, y=c: printc(x, y), width=5)
+    bnt.grid(row=r, column=c)  
+    arr2[r][c]=1
+    take_out()
+    judge_win()       
 def printc(i,j):
         global arr2
         global count
         if(arr2[i][j]!=0):
-            bnt=Button(windows,bg="#ffa000",command=lambda x=i, y=j: printc(x, y), width=5)
-            bnt.grid(row=i, column=j) 
             bnt=Button(windows,text="这里下不了，换个地方吧",bg="#e51c23",width=20)
             bnt.grid(row=35,column=20)
-            take_out()
-            judge_win()
         elif(arr2[i][j]==0):
-                if(count==-1):
-                    count=1
-                    arr2[i][j]=-1
-                    bnt=Button(windows,bg="black",command=lambda x=i, y=j: printc(x, y), width=5)
-                    bnt.grid(row=i, column=j) 
-                    bnt=Button(windows,text="白方执子",bg="#e51c23",width=20)
-                    bnt.grid(row=35,column=20)
-                    take_out()
-                    judge_win()
-                else:
-                    count=-1
-                    arr2[i][j]=1
-                    bnt=Button(windows,bg="white",command=lambda x=i, y=j: printc(x, y), width=5)
-                    bnt.grid(row=i, column=j)
-                    bnt=Button(windows,text="黑方执子",bg="#e51c23",width=20)
-                    bnt.grid(row=35,column=20)
-                    take_out() 
-                    judge_win()
+                arr2[i][j]=-1
+                count=1
+                bnt=Button(windows,bg="black",command=lambda x=i, y=j: printc(x, y), width=5)
+                bnt.grid(row=i, column=j) 
+                take_out()
+                judge_win()
+                ai()
 windows=Tk()
 windows.geometry("200x200")   
 windows.title("窗口") 
@@ -169,13 +168,13 @@ def update_time():
     seconds -= 1 # 倒计时减一秒
     timer_label.config(text=str(seconds)) # 更新标签显示
     if seconds > 0: # 如果倒计时大于0，继续计时
-        timer_label.after(1000, update_time) # 1000毫秒后再次执行此函数
+        timer_label.after(1000, update_time) # 1秒后再次执行此函数
     else: # 如果倒计时等于0，停止计时
         timer_label.config(text="Time's up!") # 显示提示信息
 
-seconds = 600 # 初始倒计时为10秒
+seconds = 600 # 初始倒计时为600秒
 timer_label = Label(windows, text=str(seconds), font="black") # 创建一个标签显示倒计时
 #timer_label.pack()
 timer_label.grid(row=5, column=30,padx=(10, 20), pady=5)
-timer_label.after(1000, update_time) # 1000毫秒后执行update_time函数
+timer_label.after(1000, update_time) # 1秒后执行update_time函数
 windows.mainloop() 
